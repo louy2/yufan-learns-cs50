@@ -7,22 +7,13 @@
 
 int brute_salt(const char * plaintext, const char * target)
 {
-    const char * salts = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
-    int salts_len = strlen(salts);
-    for (int i = 0; i < salts_len; i++)
-    {
-        char salt[3] = {'\0', '\0', '\0'};
-        salt[0] = salts[i];
-        for (int j = 0; j < salts_len; j++)
-        {
-            salt[1] = salts[j];
-            char * ciphertext = crypt(plaintext, salt);
-            if (ciphertext == NULL)
-                return false;
-            if (strcmp(ciphertext, target) == 0)
-                return true;
-        }
-    }
+    char salt[3] = {'\0', '\0', '\0'};
+    memcpy(salt, target, 2);
+    char * ciphertext = crypt(plaintext, salt);
+    if (ciphertext == NULL)
+        return false;
+    if (strcmp(ciphertext, target) == 0)
+        return true;
     return false;
 }
 
@@ -93,6 +84,7 @@ int main(int argc, const char * argv[])
     }
     
     
+    plaintext[0] = '\0';
 found:
     printf("%s\n", plaintext);
     
